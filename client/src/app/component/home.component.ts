@@ -21,7 +21,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
     private hasBaseDropZoneOver = false;
     private hasAnotherDropZoneOver = false;
-    private endpoint = 'http://localhost:3000/text';
+    private endpoint = 'http://138.197.117.5:3000/text';
     constructor(protected activatedRoute: ActivatedRoute) {
         super(activatedRoute);
     }
