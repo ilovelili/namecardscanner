@@ -1,0 +1,15 @@
+<div class="container-fluid">
+    <div class="row">        
+        <div class="col-md-3">
+            <div ng2FileDrop [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" [uploader]="fileUploader" (fileOver)="fileOverBase($event)" class="well my-drop-zone">
+                Drop image file here
+            </div>
+            <div>
+                <span class="text-danger">{{ message }}</span>
+                <span class="text-info">{{ text.Text }}</span>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /.container-fluid -->

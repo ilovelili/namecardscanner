@@ -1,0 +1,15 @@
+version: '3'
+
+# Define the services/containers to be run
+services:
+  client:
+    build: client # specify the directory of the Dockerfile
+    ports:
+      - "4200:4200" # specify port forwarding
+    links:
+      - server
+
+  server:
+    build: server # specify the directory of the Dockerfile
+    ports:
+      - "3000:3000" # specify ports forwarding
