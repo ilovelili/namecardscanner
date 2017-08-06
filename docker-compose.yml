@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 # Define the services/containers to be run
 services:
@@ -10,6 +10,6 @@ services:
       - server
 
   server:
-    build: server # specify the directory of the Dockerfile
+    build: server # specify the directory of the dockerfile
     ports:
       - "3000:3000" # specify ports forwarding

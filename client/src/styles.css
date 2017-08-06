@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+input {
+    max-width: 500px;
+}
+
+.navi {
+    margin-top: 2%;
+    margin-bottom: 1%;
+}
+
+.page-header {
+    margin-top: 1%;
+}
