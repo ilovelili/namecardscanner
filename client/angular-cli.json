@@ -61,7 +61,10 @@
       "directive": true,
       "module": false,
       "pipe": true,
-      "service": true
+      "service": true,
+      "serve": {
+        "port": 80
+      }
     }
   }
 }
