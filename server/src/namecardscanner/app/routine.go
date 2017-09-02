@@ -2,12 +2,12 @@ package app
 
 import (
 	"bytes"
+	"encoding/json"
 	"io"
 	"namecardscanner/core"
 	"namecardscanner/middleware"
+	"namecardscanner/model"
 	"net/http"
-
-	"github.com/gorilla/mux"
 )
 
 func (app *App) aliveCheck(w http.ResponseWriter, r *http.Request) {
@@ -34,12 +34,18 @@ func (app *App) detectTextByImageStream(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-// detectTextByBase64 Detect Text By Base64 (GET)
+// detectTextByBase64 Detect Text By Base64 (POST)
 func (app *App) detectTextByBase64(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	content := vars["content"]
-	response := core.DetectTextByBase64(content)
+	var request model.Request
 
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&request); err != nil {
+		middleware.RespondWithJSON(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	response := core.DetectTextByBase64(request.Content)
 	if response.Success {
 		middleware.RespondWithJSON(w, http.StatusOK, response)
 	} else {
