@@ -42,16 +42,26 @@ type VisionResponse struct {
 	Success bool
 }
 
-// DetectText detect text
-func DetectText(buffer bytes.Buffer) *VisionResponse {
-	res := &VisionResponse{}
-
-	service, err := vision.New(client)
-	if err != nil {
-		res.Text = err.Error()
-		res.Success = false
-		return res
+// DetectTextByBase64 detect text by base64 encoded image content
+func DetectTextByBase64(content string) *VisionResponse {
+	req := &vision.AnnotateImageRequest{
+		// Apply image which is encoded by base64
+		Image: &vision.Image{
+			Content: content,
+		},
+		// Apply features to indicate what type of image detection
+		Features: []*vision.Feature{
+			{
+				Type: string(TextDetection),
+			},
+		},
 	}
+
+	return detectText(req)
+}
+
+// DetectTextByImageStream detect text by image stream uploaded
+func DetectTextByImageStream(buffer bytes.Buffer) *VisionResponse {
 
 	imagestream := buffer.Bytes()
 	req := &vision.AnnotateImageRequest{
@@ -65,6 +75,19 @@ func DetectText(buffer bytes.Buffer) *VisionResponse {
 				Type: string(TextDetection),
 			},
 		},
+	}
+
+	return detectText(req)
+}
+
+func detectText(req *vision.AnnotateImageRequest) *VisionResponse {
+	res := &VisionResponse{}
+
+	service, err := vision.New(client)
+	if err != nil {
+		res.Text = err.Error()
+		res.Success = false
+		return res
 	}
 
 	// BatchAnnotateImagesRequest: Multiple image annotation requests are batched into a single service call.
