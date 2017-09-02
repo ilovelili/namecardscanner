@@ -26,7 +26,8 @@ func (app *App) Initialize() {
 // Run ListenAndServe
 func (app *App) Run(addr string) {
 	handler := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:4200", "http://localhost:4400", "http://46.101.141.88"},
+		// AllowedOrigins:   []string{"http://localhost:4200", "http://localhost:4400", "http://46.101.141.88"},
+		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
 	}).Handler(app.Router)
 
