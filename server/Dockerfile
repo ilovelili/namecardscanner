@@ -21,7 +21,7 @@ RUN go get golang.org/x/oauth2/google
 RUN go get google.golang.org/api/vision/...
 
 # Test it, build it and copy to compiled directory
-RUN cd $SRC_DIR/namecardscanner; go build -o namecardscanner; cp namecardscanner serviceaccount.json /app/;
+RUN cd $SRC_DIR/namecardscanner; go build -o namecardscanner; cp -r namecardscanner serviceaccount.json download /app/;
 
 ENTRYPOINT ["./namecardscanner"]
 
