@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"namecardscanner/core"
 	"namecardscanner/middleware"
 	"namecardscanner/model"
+	"namecardscanner/vision"
 	"net/http"
 )
 
@@ -26,7 +26,7 @@ func (app *App) detectTextByImageStream(w http.ResponseWriter, r *http.Request) 
 	defer file.Close()
 	io.Copy(&buf, file)
 
-	response := core.DetectTextByImageStream(buf)
+	response := vision.DetectTextByImageStream(buf)
 	if response.Success {
 		middleware.RespondWithJSON(w, http.StatusOK, response)
 	} else {
@@ -45,7 +45,7 @@ func (app *App) detectTextByBase64(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	response := core.DetectTextByBase64(request.Content)
+	response := vision.DetectTextByBase64(request.Content)
 	if response.Success {
 		middleware.RespondWithJSON(w, http.StatusOK, response)
 	} else {

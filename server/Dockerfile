@@ -19,6 +19,7 @@ RUN go get github.com/rs/cors
 RUN go get golang.org/x/net/context
 RUN go get golang.org/x/oauth2/google
 RUN go get google.golang.org/api/vision/...
+RUN go get google.golang.org/api/language/...
 
 # Test it, build it and copy to compiled directory
 RUN cd $SRC_DIR/namecardscanner; go build -o namecardscanner; cp -r namecardscanner serviceaccount.json download /app/;

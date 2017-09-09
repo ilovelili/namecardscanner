@@ -1,14 +1,16 @@
-// Package core core logic handling business card parsing
-package core
+// Package vision core logic handling business card image parsing
+package vision
 
 import (
 	"bytes"
 	"encoding/base64"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"path"
 
+	"namecardscanner/naturallanguage"
 	"namecardscanner/util"
 
 	"golang.org/x/oauth2"
@@ -17,7 +19,8 @@ import (
 )
 
 var (
-	client *http.Client
+	client         *http.Client
+	requiredFields = []string{"ORGANIZATION", "PERSON", "LOCATION"}
 )
 
 func init() {
@@ -38,8 +41,8 @@ func init() {
 
 // VisionResponse response provided by google vision API
 type VisionResponse struct {
-	Text    string
-	Success bool
+	ParsedItems []*naturallanguage.ParsedItem
+	Success     bool
 }
 
 // DetectTextByBase64 detect text by base64 encoded image content
@@ -85,7 +88,6 @@ func detectText(req *vision.AnnotateImageRequest) *VisionResponse {
 
 	service, err := vision.New(client)
 	if err != nil {
-		res.Text = err.Error()
 		res.Success = false
 		return res
 	}
@@ -98,7 +100,6 @@ func detectText(req *vision.AnnotateImageRequest) *VisionResponse {
 	// Annotate: Run image detection and annotation for a batch of images. Do executes the "vision.images.annotate" call
 	response, err := service.Images.Annotate(batch).Do()
 	if err != nil {
-		res.Text = err.Error()
 		res.Success = false
 		return res
 	}
@@ -106,12 +107,38 @@ func detectText(req *vision.AnnotateImageRequest) *VisionResponse {
 	// TextAnnotations: If present, text detection completed successfully
 	// Description: Entity textual description
 	if annotations := response.Responses[0].TextAnnotations; len(annotations) > 0 {
-		res.Text = annotations[0].Description
-		res.Success = true
+		text := annotations[0].Description
+
+		fmt.Println(text)
+
+		parsedEntities, err := naturallanguage.Parse(text)
+		if err != nil {
+			res.Success = false
+			return res
+		}
+
+		items := make([]*naturallanguage.ParsedItem, 0)
+		for _, entity := range parsedEntities.Entities {
+			if contains(requiredFields, entity.Type) {
+				items = append(items, &naturallanguage.ParsedItem{Name: entity.Name, Type: entity.Type})
+			}
+		}
+
+		res.ParsedItems = items
+		res.Success = len(res.ParsedItems) > 0
 		return res
 	}
 
-	res.Text = ""
 	res.Success = false
 	return res
+}
+
+// Array.contains helper
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
 }

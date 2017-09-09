@@ -1,4 +1,4 @@
-package core
+package vision
 
 // DetectionType detection type (label or text)
 type DetectionType string

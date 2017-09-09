@@ -12,7 +12,7 @@ import { FileUploader } from 'ng2-file-upload';
 
 export class HomeComponent extends BaseComponent implements OnInit {    
     private text: Text = {
-        Text: '',
+        Text: [],
         Success: false,
     };
 
@@ -21,7 +21,8 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
     private hasBaseDropZoneOver = false;
     private hasAnotherDropZoneOver = false;
-    private endpoint = 'http://46.101.141.88:3000/text/filestream';
+    // private endpoint = 'http://46.101.141.88:3000/text/filestream';
+    private endpoint = 'http://localhost:3000/text/filestream';
     constructor(protected activatedRoute: ActivatedRoute) {
         super(activatedRoute);
     }

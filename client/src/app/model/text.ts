@@ -1,5 +1,11 @@
 // Detected text
 export class Text {
     Success: boolean;
-    Text: string;
+    Text: ParsedItems[];
+}
+
+// ParsedItems parsed item
+export class ParsedItems {
+    Name: string;
+    Type: string;
 }
